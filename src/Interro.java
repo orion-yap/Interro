@@ -154,17 +154,20 @@ public class Interro {
             player = new Player();
         }
 
-        class Player extends JPanel implements KeyListener{
+        class Player extends JPanel implements KeyListener, MouseListener, MouseMotionListener{
             boolean map;
             boolean up, down, left, right;
+            boolean mouseDown;
             boolean f3;
             int[] pos = new int[2];
             int move;
             int health;
             int speed;
             int scope;
+            int mX, mY;
             int[] beachXScaled;
             int[] beachYScaled;
+            BasicStroke normal, border;
             public Player(){
                 PlayerMover playerMover = new PlayerMover();
                 Timer playerTimer = new Timer(5, playerMover);
@@ -186,6 +189,11 @@ public class Interro {
                 map = false;
                 f3 = false;
                 move = 0;
+                mouseDown = false;
+                mX = getX();
+                mY = getY();
+                normal = new BasicStroke(1);
+                border = new BasicStroke(5);
             }
 
             public void paintComponent(Graphics g){
@@ -255,9 +263,16 @@ public class Interro {
                             g2.fillOval((rocks[i][0] - pos[0]) * scale / scope + 500, (rocks[i][1] - pos[1]) * scale / scope + 500, 5 * scale / scope, 5 * scale / scope);
                         }
                     }
-                    //player
+                    //player body
                     g2.setColor(Color.decode("#fae06b"));
                     g2.fillOval(500 - 50 / 2 / scope, 500 - 50 / 2 / scope, 50 / scope, 50 / scope);
+                    g2.setColor(Color.BLACK);
+                    g2.setStroke(border);
+                    g2.drawOval(500 - 50 / 2 / scope, 500 - 50 / 2 / scope, 50 / scope, 50 / scope);
+                    //player hands
+                    g2.setColor(Color.decode("#fae06b"));
+                    g2.setStroke(normal);
+                    //g2.fillOval();
                     //tree trunks
                     for(int i = 0; i < trees.length; i++) {
                         for (int j = 0; j < 2; j++) {
@@ -361,6 +376,28 @@ public class Interro {
                     }
                 }
             }
+
+            public void mouseClicked(MouseEvent e){}
+
+            public void mousePressed(MouseEvent e){
+                mouseDown = true;
+
+            }
+
+            public void mouseReleased(MouseEvent e){
+                mouseDown = false;
+            }
+
+            public void mouseEntered(MouseEvent e){}
+
+            public void mouseExited(MouseEvent e){}
+
+            public void mouseMoved(MouseEvent e){
+                mX = getX();
+                mY = getY();
+            }
+
+            public void mouseDragged(MouseEvent e){}
         }
     }
 }
