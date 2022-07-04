@@ -157,7 +157,7 @@ public class Interro {
         class Player extends JPanel implements KeyListener, MouseListener, MouseMotionListener{
             boolean map;
             boolean up, down, left, right;
-            boolean mouseDown;
+            boolean mouseDown, mIn;
             boolean f3;
             int[] pos = new int[2];
             int move;
@@ -179,6 +179,8 @@ public class Interro {
 
                 setBackground(Color.decode("#28546c"));
                 addKeyListener(this);
+                addMouseListener(this);
+                addMouseMotionListener(this);
                 for(int i = 0; i < 2; i++){
                     pos[i] = (int)(Math.random()*mapWidth+margin);
                 }
@@ -190,10 +192,11 @@ public class Interro {
                 f3 = false;
                 move = 0;
                 mouseDown = false;
-                mX = getX();
-                mY = getY();
                 normal = new BasicStroke(1);
                 border = new BasicStroke(5);
+                mIn = true;
+                mX = 0;
+                mY = 0;
             }
 
             public void paintComponent(Graphics g){
@@ -272,7 +275,12 @@ public class Interro {
                     //player hands
                     g2.setColor(Color.decode("#fae06b"));
                     g2.setStroke(normal);
-                    //g2.fillOval();
+                    //center - 2, center - 2, 4, 4
+                    g2.fillOval(500 - 25 - 10, 500 - 25 - 10, 20, 20);
+                    g2.fillOval(500 + 25 - 10, 500 - 25 - 10, 20, 20);
+                    g2.setColor(Color.BLACK);
+                    g2.setStroke(border);
+//                    g2.drawOval(mX, mY, 4, 4);
                     //tree trunks
                     for(int i = 0; i < trees.length; i++) {
                         for (int j = 0; j < 2; j++) {
@@ -287,10 +295,6 @@ public class Interro {
                             g2.fillOval((trees[i][0] - 3 - pos[0]) * scale / scope + 500 - scale / scope / 2, (trees[i][1] - 3 - pos[1]) * scale / scope + 500 - scale / scope / 2, 12 * scale / scope, 12 * scale / scope);
                         }
                     }
-                    //reference lines
-                    g2.setColor(Color.BLACK);
-                    g2.drawLine(500, 0, 500, 1000);
-                    g2.drawLine(0, 500, 1000, 500);
                 }
                 if(f3){
                     g2.setColor(Color.BLACK);
@@ -388,13 +392,19 @@ public class Interro {
                 mouseDown = false;
             }
 
-            public void mouseEntered(MouseEvent e){}
+            public void mouseEntered(MouseEvent e){
+                mIn = true;
+            }
 
-            public void mouseExited(MouseEvent e){}
+            public void mouseExited(MouseEvent e){
+                mIn = false;
+            }
 
             public void mouseMoved(MouseEvent e){
-                mX = getX();
-                mY = getY();
+                if(mIn) {
+                    mX = getMousePosition().x;
+                    mY = getMousePosition().y;
+                }
             }
 
             public void mouseDragged(MouseEvent e){}
